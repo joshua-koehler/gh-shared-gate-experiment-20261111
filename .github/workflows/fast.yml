@@ -1,0 +1,8 @@
+name: Fast
+on: [pull_request]
+jobs:
+  gate:
+    name: Shared Gate
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo fast
