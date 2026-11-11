@@ -1,0 +1,16 @@
+name: Reusable parent
+on: pull_request
+jobs:
+  child:
+    uses: ./.github/workflows/reusable-child.yml
+  verdict:
+    if: always()
+    needs: child
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          RESULT: ${{ needs.child.result }}
+          GATE: ${{ needs.child.outputs.gate_result }}
+        run: |
+          echo "child=$RESULT gate=$GATE"
+          test "$RESULT" = failure && test "$GATE" = success
