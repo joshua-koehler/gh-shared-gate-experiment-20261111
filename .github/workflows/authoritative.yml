@@ -1,0 +1,22 @@
+name: Authoritative gate test
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  fast:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo fast pass
+  slow:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 45; exit 1
+  authoritative:
+    name: Authoritative Gate
+    if: always()
+    needs: [fast, slow]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: jq -e 'all(.[]; .result == "success")' <<< "$NEEDS"
