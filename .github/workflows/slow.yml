@@ -1,14 +1,8 @@
 name: Slow
 on: [pull_request]
 jobs:
-  test:
+  gate:
+    name: Shared Gate
     runs-on: ubuntu-latest
     steps:
       - run: sleep 180; exit 1
-  gate:
-    name: Shared Gate
-    needs: test
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - run: exit 1
